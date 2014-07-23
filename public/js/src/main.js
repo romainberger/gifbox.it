@@ -65,7 +65,12 @@
       })
 
       return (
-        <div>{collections}</div>
+        <div className="col-md-12">
+          <div className="row">
+            <h2 className="col-md-12">My collections</h2>
+          </div>
+          {collections}
+        </div>
       )
     }
   })
@@ -73,8 +78,10 @@
   var CollectionPreview = React.createClass({
     render: function() {
       return (
-        <div>
-          <a href={"/#/collection/" + this.props.collection.id}>{this.props.collection.name}</a>
+        <div className="row">
+          <div className="col-md-12">
+            <a href={"/#/collection/" + this.props.collection.id}>{this.props.collection.name}</a>
+          </div>
         </div>
       )
     }
@@ -82,8 +89,31 @@
 
   var Collection = React.createClass({
     render: function() {
+      var gifs = this.props.gifs.map(function(gif) {
+        return <GifPreview gif={gif} />
+      })
+
       return (
-        <div>Collection</div>
+        <div className="col-md-12">
+          <div className="row">
+            <h2 className="col-md-12">Collection / {this.props.collection.name}</h2>
+          </div>
+          {gifs}
+        </div>
+      )
+    }
+  })
+
+  var GifPreview = React.createClass({
+    render: function() {
+      return (
+        <div className="row gif-preview">
+          <div className="col-md-12">
+            <a href={"/#/gif/" + this.props.gif.id}>
+              <img src={this.props.gif.url} />
+            </a>
+          </div>
+        </div>
       )
     }
   })
@@ -91,7 +121,13 @@
   var Gif = React.createClass({
     render: function() {
       return (
-        <div>Gif</div>
+        <div>
+          <div>
+            Collection: <a href={"/#/collection/" + this.props.collection.id}>{this.props.collection.name}</a></div>
+          <div>
+            <img src={this.props.gif.url} />
+          </div>
+        </div>
       )
     }
   })
@@ -123,10 +159,15 @@
       React.renderComponent(<CollectionList />, app)
     },
     collection: function(idCollection) {
-      React.renderComponent(<Collection />, app)
+      var collection = _.find(FIXTURES.collections, {id: parseInt(idCollection)})
+        , gifs = _.filter(FIXTURES.gifs, {id_collection: parseInt(idCollection)})
+
+      React.renderComponent(<Collection collection={collection} gifs={gifs} />, app)
     },
     gif: function(idGif) {
-      React.renderComponent(<Gif />, app)
+      var gif = _.find(FIXTURES.gifs, {id: parseInt(idGif)})
+        , collection = _.find(FIXTURES.collections, {id: gif.id_collection})
+      React.renderComponent(<Gif gif={gif} collection={collection} />, app)
     }
   })
 

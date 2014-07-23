@@ -65,7 +65,12 @@
       })
 
       return (
-        React.DOM.div(null, collections)
+        React.DOM.div( {className:"col-md-12"}, 
+          React.DOM.div( {className:"row"}, 
+            React.DOM.h2( {className:"col-md-12"}, "My collections")
+          ),
+          collections
+        )
       )
     }
   })
@@ -73,8 +78,10 @@
   var CollectionPreview = React.createClass({displayName: 'CollectionPreview',
     render: function() {
       return (
-        React.DOM.div(null, 
-          React.DOM.a( {href:"/#/collection/" + this.props.collection.id}, this.props.collection.name)
+        React.DOM.div( {className:"row"}, 
+          React.DOM.div( {className:"col-md-12"}, 
+            React.DOM.a( {href:"/#/collection/" + this.props.collection.id}, this.props.collection.name)
+          )
         )
       )
     }
@@ -82,8 +89,31 @@
 
   var Collection = React.createClass({displayName: 'Collection',
     render: function() {
+      var gifs = this.props.gifs.map(function(gif) {
+        return GifPreview( {gif:gif} )
+      })
+
       return (
-        React.DOM.div(null, "Collection")
+        React.DOM.div( {className:"col-md-12"}, 
+          React.DOM.div( {className:"row"}, 
+            React.DOM.h2( {className:"col-md-12"}, "Collection / ", this.props.collection.name)
+          ),
+          gifs
+        )
+      )
+    }
+  })
+
+  var GifPreview = React.createClass({displayName: 'GifPreview',
+    render: function() {
+      return (
+        React.DOM.div( {className:"row gif-preview"}, 
+          React.DOM.div( {className:"col-md-12"}, 
+            React.DOM.a( {href:"/#/gif/" + this.props.gif.id}, 
+              React.DOM.img( {src:this.props.gif.url} )
+            )
+          )
+        )
       )
     }
   })
@@ -91,7 +121,13 @@
   var Gif = React.createClass({displayName: 'Gif',
     render: function() {
       return (
-        React.DOM.div(null, "Gif")
+        React.DOM.div(null, 
+          React.DOM.div(null, 
+            "Collection: ", React.DOM.a( {href:"/#/collection/" + this.props.collection.id}, this.props.collection.name)),
+          React.DOM.div(null, 
+            React.DOM.img( {src:this.props.gif.url} )
+          )
+        )
       )
     }
   })
@@ -123,10 +159,15 @@
       React.renderComponent(CollectionList(null ), app)
     },
     collection: function(idCollection) {
-      React.renderComponent(Collection(null ), app)
+      var collection = _.find(FIXTURES.collections, {id: parseInt(idCollection)})
+        , gifs = _.filter(FIXTURES.gifs, {id_collection: parseInt(idCollection)})
+
+      React.renderComponent(Collection( {collection:collection, gifs:gifs} ), app)
     },
     gif: function(idGif) {
-      React.renderComponent(Gif(null ), app)
+      var gif = _.find(FIXTURES.gifs, {id: parseInt(idGif)})
+        , collection = _.find(FIXTURES.collections, {id: gif.id_collection})
+      React.renderComponent(Gif( {gif:gif, collection:collection} ), app)
     }
   })
 
