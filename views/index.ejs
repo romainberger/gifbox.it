@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<head>
+    <title>Gifbox.it</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Gifbox.it</h1>
+            </div>
+            <div class="col-md-6">
+                <div id="login"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="app"></div>
+        </div>
+    </div>
+    <script>
+        var facebookAppId = <%= facebookAppId %>
+    </script>
+    <script src="/js/build/react.js"></script>
+    <script src="/js/build/main.js"></script>
+    <script>
+        (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+</body>
 </html>
